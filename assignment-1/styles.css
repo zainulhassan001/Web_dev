@@ -55,6 +55,43 @@ body {
   gap: 14px;
 }
 
+.hero-section {
+  background-color: #ffe4d6;
+  min-height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 0;
+}
+
+.hero-content h1 {
+  font-size: 48px;
+  color: #f85606;
+  margin-bottom: 12px;
+}
+
+.hero-content p {
+  font-size: 18px;
+  color: #333333;
+  margin-bottom: 20px;
+}
+
+.shop-btn {
+  display: inline-block;
+  padding: 10px 22px;
+  border: 2px solid #f85606;
+  color: #f85606;
+  text-decoration: none;
+  font-weight: bold;
+  background-color: #ffffff;
+}
+
+.shop-btn:hover {
+  background-color: #f85606;
+  color: #ffffff;
+}
+
 @media (max-width: 768px) {
   .header-row {
     flex-direction: column;
@@ -65,5 +102,13 @@ body {
   .header-actions {
     flex-wrap: wrap;
     gap: 10px;
+  }
+
+  .hero-content h1 {
+    font-size: 36px;
+  }
+
+  .hero-content p {
+    font-size: 16px;
   }
 }
