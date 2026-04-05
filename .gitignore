@@ -1,2 +1,4 @@
 Project/
 midterm lab/
+node_modules/
+package-lock.json
