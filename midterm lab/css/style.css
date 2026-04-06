@@ -1,4 +1,3 @@
-
 * {
     margin: 0;
     padding: 0;
@@ -811,7 +810,63 @@ body {
 .pagination-dots {
     color: var(--text-gray);
 }
+/* Products Carousel Styling */
+.products-carousel {
+    margin: 0 -10px;
+}
 
+.products-carousel .product-card {
+    margin: 0 10px;
+}
+
+.carousel-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.carousel-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--primary-color);
+    color: var(--bg-white);
+    border: none;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.carousel-btn:hover {
+    background-color: #004d52;
+}
+
+.carousel-btn:active {
+    transform: translateY(1px);
+}
+
+.slide-counter {
+    min-width: 130px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-light);
+    font-weight: 600;
+}
+
+.products-carousel .slick-track {
+    display: flex;
+}
+
+.products-carousel .slick-slide {
+    height: inherit;
+}
+
+.products-carousel .slick-slide > div {
+    height: 100%;
+}
 /* Responsive Design */
 @media (max-width: 1024px) {
     .content-wrapper {
