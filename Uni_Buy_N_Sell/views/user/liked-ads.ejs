@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'Uni Buy & Sell' %></title>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/ads.css">
+</head>
+<body>
+  <%- include('../partials/nav') %>
+  <main class="container">
+    <%- include('../partials/flash') %>
+    <h1>Saved Ads</h1>
+
+    <% if (!ads.length) { %>
+      <p style="margin-top: 1rem;">You haven't saved any ads yet. Browse ads to find items you like.</p>
+    <% } else { %>
+      <div class="ads-grid" style="margin-top: 1rem;">
+        <% ads.forEach(ad => { %>
+          <%- include('../partials/ad-card', { ad }) %>
+        <% }) %>
+      </div>
+    <% } %>
+  </main>
+  <%- include('../partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'Uni Buy & Sell' %></title>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/ads.css">
+</head>
+<body>
+  <%- include('partials/nav') %>
+  <main class="container">
+    <%- include('partials/flash') %>
+
+    <section class="hero" style="text-align: center; padding: 3rem 0;">
+      <h1>Buy & Sell Anything On Campus</h1>
+      <p style="color: var(--text-muted); max-width: 720px; margin: 1rem auto 2rem;">
+        Post listings, discover deals, and chat with students in minutes.
+      </p>
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a class="btn btn-primary" href="/ads">Browse Ads</a>
+        <a class="btn btn-secondary" href="/ads/post">Post an Ad</a>
+      </div>
+    </section>
+
+    <section style="margin-top: 3rem;">
+      <h2>Featured Ads</h2>
+      <div class="ads-grid" style="margin-top: 1rem;">
+        <% featuredAds.forEach(ad => { %>
+          <%- include('partials/ad-card', { ad }) %>
+        <% }) %>
+      </div>
+    </section>
+
+    <section style="margin: 3rem 0; text-align: center;">
+      <h2>How It Works</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+        <div class="card" style="padding: 1.5rem;">
+          <div class="badge" style="background: var(--primary); color: var(--white);">1</div>
+          <h3 style="margin: 0.8rem 0 0.4rem;">Post Your Ad</h3>
+          <p class="ad-meta">Add details, pricing, and photos.</p>
+        </div>
+        <div class="card" style="padding: 1.5rem;">
+          <div class="badge" style="background: var(--primary); color: var(--white);">2</div>
+          <h3 style="margin: 0.8rem 0 0.4rem;">Get Inquiries</h3>
+          <p class="ad-meta">Chat with buyers in real time.</p>
+        </div>
+        <div class="card" style="padding: 1.5rem;">
+          <div class="badge" style="background: var(--primary); color: var(--white);">3</div>
+          <h3 style="margin: 0.8rem 0 0.4rem;">Meet & Sell</h3>
+          <p class="ad-meta">Arrange a safe campus pickup.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <%- include('partials/footer') %>
+</body>
+</html>

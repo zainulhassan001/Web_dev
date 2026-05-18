@@ -1,0 +1,88 @@
+.admin-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.admin-sidebar {
+  background: #1e293b;
+  color: var(--white);
+  padding: 1.5rem 1rem;
+}
+
+.admin-sidebar nav {
+  background: transparent;
+  border: none;
+  position: static;
+}
+
+.admin-sidebar h2 {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+.admin-sidebar a {
+  display: block;
+  color: var(--white);
+  text-decoration: none;
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 0.4rem;
+}
+
+.admin-sidebar a.active,
+.admin-sidebar a:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.admin-content {
+  padding: 2rem;
+  background: var(--white);
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  box-shadow: var(--shadow);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.data-table tr:nth-child(even) {
+  background: #f8fafc;
+}
+
+@media (max-width: 768px) {
+  .admin-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-sidebar {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+  }
+
+  .admin-sidebar a {
+    white-space: nowrap;
+  }
+}

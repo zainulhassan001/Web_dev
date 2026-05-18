@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'Uni Buy & Sell' %></title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <%- include('../partials/nav') %>
+  <main class="container">
+    <%- include('../partials/flash') %>
+    <h1>My Profile</h1>
+    <div style="margin: 1rem 0;">
+      <img src="<%= currentUser.avatar || '/img/default-avatar.svg' %>" alt="Profile photo" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin-bottom: 0.5rem;">
+      <form method="POST" action="/profile/avatar/remove" onsubmit="return confirm('Remove your profile photo?')" style="display: inline-block;">
+        <%- include('../partials/csrf') %>
+        <button class="btn btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" type="submit">Remove Photo</button>
+      </form>
+    </div>
+    <form method="POST" action="/profile" enctype="multipart/form-data" style="max-width: 500px;">
+      <%- include('../partials/csrf') %>
+      <label for="name">Name</label>
+      <input id="name" type="text" name="name" value="<%= currentUser.name %>" required>
+
+      <label for="university">University</label>
+      <input id="university" type="text" name="university" value="<%= currentUser.university || '' %>">
+
+      <label for="avatar">Profile Photo URL</label>
+      <input id="avatar" type="text" name="avatar" value="<%= currentUser.avatar || '' %>">
+
+      <label for="avatarFile">Or upload photo</label>
+      <input id="avatarFile" type="file" name="avatarFile" accept="image/*">
+
+      <label for="phone">Contact Number</label>
+      <input id="phone" type="text" name="phone" value="<%= currentUser.phone || '' %>">
+
+      <label for="bio">About</label>
+      <textarea id="bio" name="bio" rows="4"><%= currentUser.bio || '' %></textarea>
+
+      <button class="btn btn-primary" type="submit" style="margin-top: 1rem;">Update Profile</button>
+    </form>
+
+    <div style="margin-top: 2rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
+      <form method="POST" action="/account/delete" onsubmit="return confirm('Delete your account and all your ads? This cannot be undone.')">
+        <%- include('../partials/csrf') %>
+        <button class="btn btn-danger" type="submit">Delete Account</button>
+      </form>
+    </div>
+  </main>
+  <%- include('../partials/footer') %>
+</body>
+</html>
