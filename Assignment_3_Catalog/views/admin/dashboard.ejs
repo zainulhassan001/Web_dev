@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'Uni Buy & Sell' %></title>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+  <%- include('../partials/nav') %>
+  <main class="container">
+    <%- include('../partials/flash') %>
+    <div class="admin-layout">
+      <%- include('../layouts/adminLayout', { active }) %>
+      <div class="admin-content">
+        <h1>Dashboard</h1>
+        <div class="stat-grid">
+          <div class="stat-card"><strong><%= stats.totalUsers %></strong><div class="ad-meta">Total Users</div></div>
+          <div class="stat-card"><strong><%= stats.totalAds %></strong><div class="ad-meta">Total Ads</div></div>
+          <div class="stat-card"><strong><%= stats.activeAds %></strong><div class="ad-meta">Active Listings</div></div>
+          <div class="stat-card"><strong><%= stats.pendingAds %></strong><div class="ad-meta">Pending Ads</div></div>
+          <div class="stat-card"><strong><%= stats.totalMessages %></strong><div class="ad-meta">Messages</div></div>
+        </div>
+
+        <h2>Recent Signups</h2>
+        <table class="data-table">
+          <thead>
+            <tr><th>Name</th><th>Email</th><th>Role</th><th>Joined</th></tr>
+          </thead>
+          <tbody>
+            <% recentUsers.forEach(user => { %>
+              <tr>
+                <td><%= user.name %></td>
+                <td><%= user.email %></td>
+                <td><%= user.role %></td>
+                <td><%= user.createdAt.toLocaleDateString() %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+  <%- include('../partials/footer') %>
+</body>
+</html>

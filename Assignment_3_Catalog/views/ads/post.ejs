@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'Uni Buy & Sell' %></title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <%- include('../partials/nav') %>
+  <main class="container">
+    <%- include('../partials/flash') %>
+    <h1>Post an Ad</h1>
+    <form method="POST" action="/ads?_csrf=<%= csrfToken %>" enctype="multipart/form-data" style="max-width: 700px;">
+      <label for="title">Title</label>
+      <input id="title" name="title" type="text" minlength="3" maxlength="100" required>
+      <small class="form-hint">3–100 characters</small>
+
+      <label for="description">Description</label>
+      <textarea id="description" name="description" maxlength="2000" required></textarea>
+      <small class="form-hint">Max 2000 characters</small>
+
+      <label for="price">Price ($)</label>
+      <input id="price" name="price" type="number" min="0" step="0.01" required>
+      <small class="form-hint">Must be 0 or more</small>
+
+      <label for="category">Category</label>
+      <select id="category" name="category" required>
+        <% categories.forEach(cat => { %>
+          <option value="<%= cat._id %>"><%= cat.name %></option>
+        <% }) %>
+      </select>
+
+      <label for="condition">Condition</label>
+      <select id="condition" name="condition" required>
+        <option value="new">New</option>
+        <option value="like-new">Like-new</option>
+        <option value="good">Good</option>
+        <option value="fair">Fair</option>
+        <option value="poor">Poor</option>
+      </select>
+
+      <label for="campus">Campus</label>
+      <select id="campus" name="campus" required>
+        <option value="">Select campus</option>
+        <% campusOptions.forEach(c => { %>
+          <option value="<%= c %>" <%= (currentUser?.university || '') === c ? 'selected' : '' %>><%= c %></option>
+        <% }) %>
+      </select>
+
+      <label for="images">Images</label>
+      <input id="images" type="file" name="images" multiple accept="image/*">
+      <small class="form-hint">Max 5 images, each up to 5 MB. JPEG, PNG, or WebP only.</small>
+
+      <button class="btn btn-primary" type="submit" style="margin-top: 1rem;">Publish Ad</button>
+    </form>
+  </main>
+  <%- include('../partials/footer') %>
+</body>
+</html>
