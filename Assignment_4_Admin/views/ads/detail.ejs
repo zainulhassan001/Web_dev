@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'Uni Buy & Sell' %></title>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/ads.css">
+</head>
+<body>
+  <%- include('../partials/nav') %>
+  <main class="container">
+    <%- include('../partials/flash') %>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+      <div>
+        <% if (ad.images && ad.images.length) { %>
+          <div class="image-scroller">
+            <% ad.images.forEach((img, idx) => { %>
+              <div class="image-slide">
+                <img src="<%= img %>" alt="<%= ad.title %>">
+                <div class="image-count"><%= idx + 1 %>/<%= ad.images.length %></div>
+              </div>
+            <% }) %>
+          </div>
+        <% } else { %>
+          <div class="image-scroller">
+            <div class="image-slide">
+              <img src="https://picsum.photos/600/420" alt="<%= ad.title %>">
+              <div class="image-count">1/1</div>
+            </div>
+          </div>
+        <% } %>
+      </div>
+      <div>
+        <h1><%= ad.title %></h1>
+        <p class="ad-meta"><%= ad.category?.name %> · <%= ad.condition %><% if (ad.campus) { %> · <%= ad.campus %><% } %></p>
+        <h2 style="margin: 1rem 0;">$<%= ad.price %></h2>
+        <p><%= ad.description %></p>
+
+        <div style="margin-top: 1rem;">
+          <strong>Seller:</strong>
+          <% if (ad.seller?._id) { %>
+            <a href="/seller/<%= ad.seller._id %>"><%= ad.seller?.name %></a>
+          <% } else { %>
+            <%= ad.seller?.name %>
+          <% } %>
+        </div>
+
+        <div class="action-row" style="margin-top: 1.5rem;">
+          <% if (currentUser) { %>
+            <button class="btn btn-secondary like-btn" id="likeBtn">❤ Like <span class="like-count" id="likeCount"><%= ad.likesCount || 0 %></span></button>
+            <form method="POST" action="/messages/conversations">
+              <%- include('../partials/csrf') %>
+              <input type="hidden" name="adId" value="<%= ad._id %>">
+              <input type="hidden" name="recipientId" value="<%= ad.seller?._id %>">
+              <button class="btn btn-primary" type="submit">Message Seller</button>
+            </form>
+          <% } else { %>
+            <a class="btn btn-primary" href="/login">Login to Message</a>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </main>
+  <%- include('../partials/footer') %>
+
+  <% if (currentUser) { %>
+  <script>
+    const adId = '<%= ad._id %>';
+    const csrfToken = '<%= csrfToken %>';
+    document.getElementById('likeBtn').addEventListener('click', async () => {
+      const res = await fetch(`/likes/${adId}/toggle`, {
+        method: 'POST',
+        headers: { 'x-csrf-token': csrfToken }
+      });
+      const data = await res.json();
+      document.getElementById('likeBtn').classList.toggle('liked', data.liked);
+      document.getElementById('likeCount').textContent = data.liked
+        ? parseInt(document.getElementById('likeCount').textContent) + 1
+        : parseInt(document.getElementById('likeCount').textContent) - 1;
+    });
+  </script>
+  <% } %>
+</body>
+</html>

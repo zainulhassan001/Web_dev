@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'Uni Buy & Sell' %></title>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/admin.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <%- include('../partials/nav') %>
+  <main class="container">
+    <%- include('../partials/flash') %>
+    <div class="admin-layout">
+      <%- include('../layouts/adminLayout', { active }) %>
+      <div class="admin-content">
+        <h1>Analytics</h1>
+        <canvas id="adsChart" height="120"></canvas>
+      </div>
+    </div>
+  </main>
+  <%- include('../partials/footer') %>
+  <script>
+    const ctx = document.getElementById('adsChart');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: <%- JSON.stringify(chartLabels) %>,
+        datasets: [{
+          label: 'Ads per Category',
+          data: <%- JSON.stringify(chartValues) %>,
+          backgroundColor: '#6366f1'
+        }]
+      }
+    });
+  </script>
+</body>
+</html>

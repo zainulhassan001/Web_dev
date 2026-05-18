@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'Uni Buy & Sell' %></title>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/ads.css">
+</head>
+<body>
+  <%- include('../partials/nav') %>
+  <main class="container">
+    <%- include('../partials/flash') %>
+    <h1>Browse Ads</h1>
+
+    <form method="GET" action="/ads" style="display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin: 1rem 0;">
+      <input type="text" name="q" placeholder="Search ads..." value="<%= query.q || '' %>">
+
+      <select name="category">
+        <option value="">All Categories</option>
+        <% categories.forEach(cat => { %>
+          <option value="<%= cat._id %>" <%= query.category === String(cat._id) ? 'selected' : '' %>><%= cat.name %></option>
+        <% }) %>
+      </select>
+
+      <input type="number" name="minPrice" placeholder="Min price" value="<%= query.minPrice || '' %>">
+      <input type="number" name="maxPrice" placeholder="Max price" value="<%= query.maxPrice || '' %>">
+
+      <select name="campus">
+        <option value="">All Campuses</option>
+        <% campusOptions.forEach(c => { %>
+          <option value="<%= c %>" <%= query.campus === c ? 'selected' : '' %>><%= c %></option>
+        <% }) %>
+      </select>
+
+      <select name="sort">
+        <option value="">Newest</option>
+        <option value="oldest" <%= query.sort === 'oldest' ? 'selected' : '' %>>Oldest</option>
+        <option value="price_asc" <%= query.sort === 'price_asc' ? 'selected' : '' %>>Price: Low to High</option>
+        <option value="price_desc" <%= query.sort === 'price_desc' ? 'selected' : '' %>>Price: High to Low</option>
+      </select>
+
+      <button class="btn btn-primary" type="submit">Apply Filters</button>
+    </form>
+
+    <% const start = total === 0 ? 0 : (currentPage - 1) * 8 + 1; %>
+    <% const end = Math.min(currentPage * 8, total); %>
+    <p class="ad-meta">Showing <%= start %>–<%= end %> of <%= total %> ads</p>
+
+    <div class="ads-grid" style="margin-top: 1rem;">
+      <% ads.forEach(ad => { %>
+        <%- include('../partials/ad-card', { ad }) %>
+      <% }) %>
+    </div>
+
+    <% if (totalPages > 1) { %>
+      <div style="display: flex; gap: 0.5rem; margin-top: 1.5rem; flex-wrap: wrap;">
+        <% const baseParams = { q: query.q, category: query.category, minPrice: query.minPrice, maxPrice: query.maxPrice, sort: query.sort, campus: query.campus }; %>
+        <% const buildQuery = (page) => {
+          const params = new URLSearchParams();
+          Object.keys(baseParams).forEach(key => {
+            if (baseParams[key]) params.set(key, baseParams[key]);
+          });
+          params.set('page', page);
+          return params.toString();
+        }; %>
+
+        <a class="btn btn-secondary" href="/ads?<%= buildQuery(Math.max(1, currentPage - 1)) %>" style="pointer-events: <%= currentPage === 1 ? 'none' : 'auto' %>; opacity: <%= currentPage === 1 ? 0.5 : 1 %>;">Previous</a>
+
+        <% for (let i = 1; i <= totalPages; i++) { %>
+          <a class="btn <%= currentPage === i ? 'btn-primary' : 'btn-secondary' %>" href="/ads?<%= buildQuery(i) %>"><%= i %></a>
+        <% } %>
+
+        <a class="btn btn-secondary" href="/ads?<%= buildQuery(Math.min(totalPages, currentPage + 1)) %>" style="pointer-events: <%= currentPage === totalPages ? 'none' : 'auto' %>; opacity: <%= currentPage === totalPages ? 0.5 : 1 %>;">Next</a>
+      </div>
+    <% } %>
+  </main>
+  <%- include('../partials/footer') %>
+</body>
+</html>
