@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'Uni Buy & Sell' %></title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <%- include('../partials/nav') %>
+  <main class="container">
+    <%- include('../partials/flash') %>
+    <h1>Edit Ad</h1>
+    <form method="POST" action="/ads/<%= ad._id %>/edit?_csrf=<%= csrfToken %>" enctype="multipart/form-data" style="max-width: 700px;">
+      <label for="title">Title</label>
+      <input id="title" name="title" type="text" value="<%= ad.title %>" minlength="3" maxlength="100" required>
+      <small class="form-hint">3–100 characters</small>
+
+      <label for="description">Description</label>
+      <textarea id="description" name="description" maxlength="2000" required><%= ad.description %></textarea>
+      <small class="form-hint">Max 2000 characters</small>
+
+      <label for="price">Price ($)</label>
+      <input id="price" name="price" type="number" min="0" step="0.01" value="<%= ad.price %>" required>
+      <small class="form-hint">Must be 0 or more</small>
+
+      <label for="category">Category</label>
+      <select id="category" name="category" required>
+        <% categories.forEach(cat => { %>
+          <option value="<%= cat._id %>" <%= String(ad.category) === String(cat._id) ? 'selected' : '' %>><%= cat.name %></option>
+        <% }) %>
+      </select>
+
+      <label for="condition">Condition</label>
+      <select id="condition" name="condition" required>
+        <option value="new" <%= ad.condition === 'new' ? 'selected' : '' %>>New</option>
+        <option value="like-new" <%= ad.condition === 'like-new' ? 'selected' : '' %>>Like-new</option>
+        <option value="good" <%= ad.condition === 'good' ? 'selected' : '' %>>Good</option>
+        <option value="fair" <%= ad.condition === 'fair' ? 'selected' : '' %>>Fair</option>
+        <option value="poor" <%= ad.condition === 'poor' ? 'selected' : '' %>>Poor</option>
+      </select>
+
+      <label for="campus">Campus</label>
+      <select id="campus" name="campus" required>
+        <option value="">Select campus</option>
+        <% campusOptions.forEach(c => { %>
+          <option value="<%= c %>" <%= (ad.campus || '') === c ? 'selected' : '' %>><%= c %></option>
+        <% }) %>
+      </select>
+
+      <label for="images">Replace Images</label>
+      <input id="images" type="file" name="images" multiple accept="image/*">
+      <small class="form-hint">Max 5 images, each up to 5 MB. Leave empty to keep existing images.</small>
+
+      <button class="btn btn-primary" type="submit" style="margin-top: 1rem;">Save Changes</button>
+    </form>
+  </main>
+  <%- include('../partials/footer') %>
+</body>
+</html>

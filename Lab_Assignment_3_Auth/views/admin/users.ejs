@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'Uni Buy & Sell' %></title>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+  <%- include('../partials/nav') %>
+  <main class="container">
+    <%- include('../partials/flash') %>
+    <div class="admin-layout">
+      <%- include('../layouts/adminLayout', { active }) %>
+      <div class="admin-content">
+        <h1>Users</h1>
+        <form method="GET" action="/admin/users" style="max-width: 400px; margin-bottom: 1rem;">
+          <input type="text" name="q" placeholder="Search by name or email" value="<%= q %>">
+        </form>
+        <table class="data-table">
+          <thead>
+            <tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            <% users.forEach(user => { %>
+              <tr>
+                <td><%= user.name %></td>
+                <td><%= user.email %></td>
+                <td><%= user.role %></td>
+                <td><%= user.isBanned ? 'Banned' : 'Active' %></td>
+                <td style="display: flex; gap: 0.5rem;">
+                  <form method="POST" action="/admin/users/<%= user._id %>/ban" onsubmit="return confirm('Are you sure you want to change ban status?')">
+                    <%- include('../partials/csrf') %>
+                    <button class="btn btn-danger" type="submit" <%= String(user._id) === String(currentUser._id) ? 'disabled' : '' %>><%= user.isBanned ? 'Unban' : 'Ban' %></button>
+                  </form>
+                  <form method="POST" action="/admin/users/<%= user._id %>/role" onsubmit="return confirm('Are you sure you want to change role?')">
+                    <%- include('../partials/csrf') %>
+                    <button class="btn btn-secondary" type="submit" <%= String(user._id) === String(currentUser._id) ? 'disabled' : '' %>>Toggle Role</button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+  <%- include('../partials/footer') %>
+</body>
+</html>

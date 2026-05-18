@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'Uni Buy & Sell' %></title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <%- include('../partials/nav') %>
+  <main class="container">
+    <%- include('../partials/flash') %>
+    <h1>My Ads</h1>
+    <table class="table" style="margin-top: 1rem;">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Status</th>
+          <th>Featured</th>
+          <th>Campus</th>
+          <th>Price</th>
+          <th>Expires</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% ads.forEach(ad => { %>
+          <tr>
+            <td>
+              <a href="/ads/<%= ad.slug %>" style="color: var(--primary); text-decoration: none; font-weight: 600;">
+                <%= ad.title %>
+              </a>
+            </td>
+            <td><%= ad.status %></td>
+            <td><%= ad.isFeatured ? 'Featured' : '-' %></td>
+            <td><%= ad.campus || '-' %></td>
+            <td>$<%= ad.price %></td>
+            <td><%= ad.expiresAt ? ad.expiresAt.toLocaleDateString() : '-' %></td>
+            <td style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <a class="btn btn-secondary" href="/ads/<%= ad._id %>/edit">Edit</a>
+              <form method="POST" action="/ads/<%= ad._id %>/edit" onsubmit="return confirm('Mark this ad as sold?')">
+                <%- include('../partials/csrf') %>
+                <input type="hidden" name="status" value="sold">
+                <input type="hidden" name="title" value="<%= ad.title %>">
+                <input type="hidden" name="description" value="<%= ad.description %>">
+                <input type="hidden" name="price" value="<%= ad.price %>">
+                <input type="hidden" name="category" value="<%= ad.category %>">
+                <input type="hidden" name="condition" value="<%= ad.condition %>">
+                <button class="btn btn-secondary" type="submit">Mark Sold</button>
+              </form>
+              <form method="POST" action="/ads/<%= ad._id %>/delete" onsubmit="return confirm('Are you sure you want to delete this? This cannot be undone.')">
+                <%- include('../partials/csrf') %>
+                <button class="btn btn-danger" type="submit">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </main>
+  <%- include('../partials/footer') %>
+</body>
+</html>

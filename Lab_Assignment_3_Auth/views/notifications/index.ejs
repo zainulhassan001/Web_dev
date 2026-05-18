@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'Uni Buy & Sell' %></title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <%- include('../partials/nav') %>
+  <main class="container">
+    <%- include('../partials/flash') %>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+      <h1>Notifications</h1>
+      <form method="POST" action="/notifications/read-all">
+        <%- include('../partials/csrf') %>
+        <button class="btn btn-secondary" type="submit">Mark all read</button>
+      </form>
+    </div>
+
+    <% if (!notifications.length) { %>
+      <p>No notifications yet.</p>
+    <% } else { %>
+      <div style="display: grid; gap: 0.75rem;">
+        <% notifications.forEach(note => { %>
+          <div class="card" style="padding: 1rem; border-left: 4px solid <%= note.isRead ? '#e5e7eb' : '#6366f1' %>;">
+            <div style="display: flex; justify-content: space-between; gap: 1rem;">
+              <div>
+                <strong><%= note.title %></strong>
+                <% if (note.body) { %><p class="ad-meta"><%= note.body %></p><% } %>
+                <small class="ad-meta"><%= note.createdAt.toLocaleString() %></small>
+              </div>
+              <div style="display: flex; gap: 0.5rem; align-items: start;">
+                <% if (note.link) { %>
+                  <a class="btn btn-secondary" href="<%= note.link %>">View</a>
+                <% } %>
+                <% if (!note.isRead) { %>
+                  <form method="POST" action="/notifications/<%= note._id %>/read">
+                    <%- include('../partials/csrf') %>
+                    <button class="btn btn-secondary" type="submit">Mark read</button>
+                  </form>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </main>
+  <%- include('../partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'Uni Buy & Sell' %></title>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+  <%- include('../partials/nav') %>
+  <main class="container">
+    <%- include('../partials/flash') %>
+    <div class="admin-layout">
+      <%- include('../layouts/adminLayout', { active }) %>
+      <div class="admin-content">
+        <h1>Ads</h1>
+        <form method="GET" action="/admin/ads" style="max-width: 300px; margin-bottom: 1rem; display: flex; gap: 0.5rem;">
+          <select name="status">
+            <option value="all" <%= status === 'all' ? 'selected' : '' %>>All</option>
+            <option value="active" <%= status === 'active' ? 'selected' : '' %>>Active</option>
+            <option value="pending" <%= status === 'pending' ? 'selected' : '' %>>Pending</option>
+            <option value="sold" <%= status === 'sold' ? 'selected' : '' %>>Sold</option>
+            <option value="removed" <%= status === 'removed' ? 'selected' : '' %>>Removed</option>
+          </select>
+          <button class="btn btn-secondary" type="submit">Filter</button>
+        </form>
+        <table class="data-table">
+          <thead>
+            <tr><th>Title</th><th>Seller</th><th>Status</th><th>Featured</th><th>Campus</th><th>Expires</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            <% ads.forEach(ad => { %>
+              <tr>
+                <td><%= ad.title %></td>
+                <td><%= ad.seller?.name %></td>
+                <td><%= ad.status %></td>
+                <td>
+                  <% if (ad.isFeatured) { %>
+                    <span class="badge-featured">Featured</span>
+                  <% } else { %>
+                    -
+                  <% } %>
+                </td>
+                <td><%= ad.campus || '-' %></td>
+                <td><%= ad.expiresAt ? ad.expiresAt.toLocaleDateString() : '-' %></td>
+                <td style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                  <form method="POST" action="/admin/ads/<%= ad._id %>/feature" onsubmit="return confirm('Change featured status for this ad?')">
+                    <%- include('../partials/csrf') %>
+                    <button class="btn btn-secondary" type="submit"><%= ad.isFeatured ? 'Unfeature' : 'Feature' %></button>
+                  </form>
+                  <form method="POST" action="/admin/ads/<%= ad._id %>/status" onsubmit="return confirm('Are you sure you want to update this ad status?')" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <%- include('../partials/csrf') %>
+                    <select name="status" class="status-select">
+                      <option value="active">Approve</option>
+                      <option value="pending">Pending</option>
+                      <option value="removed">Remove</option>
+                      <option value="sold">Sold</option>
+                    </select>
+                    <input type="text" name="reason" class="reason-input" placeholder="Reason (required for removal)" style="min-width: 220px; display: none;">
+                    <button class="btn btn-secondary" type="submit">Update</button>
+                  </form>
+                  <form method="POST" action="/admin/ads/<%= ad._id %>/delete" class="delete-form" onsubmit="return confirm('Are you sure you want to delete this ad? This cannot be undone.')" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <%- include('../partials/csrf') %>
+                    <input type="text" name="reason" class="reason-input" placeholder="Reason (required)" style="min-width: 220px; display: none;">
+                    <button class="btn btn-danger" type="submit">Delete</button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+  <%- include('../partials/footer') %>
+  <script>
+    document.querySelectorAll('.status-select').forEach(select => {
+      const reasonInput = select.closest('form').querySelector('.reason-input');
+      const toggleReason = () => {
+        const isRemove = select.value === 'removed';
+        reasonInput.style.display = isRemove ? 'block' : 'none';
+        if (!isRemove) reasonInput.value = '';
+      };
+      toggleReason();
+      select.addEventListener('change', toggleReason);
+    });
+
+    document.querySelectorAll('.delete-form').forEach(form => {
+      const reasonInput = form.querySelector('.reason-input');
+      const deleteBtn = form.querySelector('button[type="submit"]');
+      deleteBtn.addEventListener('click', event => {
+        if (reasonInput.style.display === 'none') {
+          event.preventDefault();
+          reasonInput.style.display = 'block';
+          reasonInput.focus();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'Uni Buy & Sell' %></title>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/ads.css">
+</head>
+<body>
+  <%- include('../partials/nav') %>
+  <main class="container">
+    <%- include('../partials/flash') %>
+
+    <div class="card" style="padding: 1.5rem; display: grid; grid-template-columns: 120px 1fr; gap: 1.5rem; align-items: center;">
+      <img src="<%= seller.avatar || '/img/default-avatar.svg' %>" alt="<%= seller.name %>" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover;">
+      <div>
+        <h1 style="margin-bottom: 0.4rem;"><%= seller.name %></h1>
+        <p class="ad-meta"><%= seller.university || 'Campus not set' %></p>
+        <% if (seller.phone) { %>
+          <p class="ad-meta">Contact: <%= seller.phone %></p>
+        <% } %>
+        <% if (seller.bio) { %>
+          <p style="margin-top: 0.6rem;"><%= seller.bio %></p>
+        <% } %>
+      </div>
+    </div>
+
+    <section style="margin-top: 2rem;">
+      <h2>Active Listings</h2>
+      <% if (!ads.length) { %>
+        <p style="margin-top: 0.5rem;">No active ads from this seller right now.</p>
+      <% } else { %>
+        <div class="ads-grid" style="margin-top: 1rem;">
+          <% ads.forEach(ad => { %>
+            <%- include('../partials/ad-card', { ad }) %>
+          <% }) %>
+        </div>
+      <% } %>
+    </section>
+  </main>
+  <%- include('../partials/footer') %>
+</body>
+</html>
