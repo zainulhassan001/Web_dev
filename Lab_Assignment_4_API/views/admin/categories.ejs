@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'Uni Buy & Sell' %></title>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+  <%- include('../partials/nav') %>
+  <main class="container">
+    <%- include('../partials/flash') %>
+    <div class="admin-layout">
+      <%- include('../layouts/adminLayout', { active }) %>
+      <div class="admin-content">
+        <h1>Categories</h1>
+        <form method="POST" action="/admin/categories" style="display: grid; gap: 0.5rem; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); margin-bottom: 1rem;">
+          <%- include('../partials/csrf') %>
+          <input type="text" name="name" placeholder="Category name" required>
+          <input type="text" name="icon" placeholder="Icon name">
+          <input type="number" name="displayOrder" placeholder="Order" value="0">
+          <button class="btn btn-primary" type="submit">Create</button>
+        </form>
+        <table class="data-table">
+          <thead>
+            <tr><th>Name</th><th>Slug</th><th>Active</th><th>Order</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            <% categories.forEach(cat => { %>
+              <tr>
+                <td><%= cat.name %></td>
+                <td><%= cat.slug %></td>
+                <td><%= cat.isActive ? 'Yes' : 'No' %></td>
+                <td><%= cat.displayOrder %></td>
+                <td>
+                  <form method="POST" action="/admin/categories/<%= cat._id %>" style="display: grid; gap: 0.4rem;">
+                    <%- include('../partials/csrf') %>
+                    <input type="text" name="name" value="<%= cat.name %>">
+                    <input type="text" name="icon" value="<%= cat.icon %>">
+                    <input type="number" name="displayOrder" value="<%= cat.displayOrder %>">
+                    <label style="display: flex; align-items: center; gap: 0.4rem;">
+                      <input type="checkbox" name="isActive" <%= cat.isActive ? 'checked' : '' %>> Active
+                    </label>
+                    <button class="btn btn-secondary" type="submit">Update</button>
+                  </form>
+                  <form method="POST" action="/admin/categories/<%= cat._id %>/delete" onsubmit="return confirm('Are you sure you want to delete this? This cannot be undone.')">
+                    <%- include('../partials/csrf') %>
+                    <button class="btn btn-danger" type="submit">Delete</button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+  <%- include('../partials/footer') %>
+</body>
+</html>

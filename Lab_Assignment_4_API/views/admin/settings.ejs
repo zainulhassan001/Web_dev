@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'Uni Buy & Sell' %></title>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+  <%- include('../partials/nav') %>
+  <main class="container">
+    <%- include('../partials/flash') %>
+    <div class="admin-layout">
+      <%- include('../layouts/adminLayout', { active }) %>
+      <div class="admin-content">
+        <h1>Settings</h1>
+        <form method="POST" action="/admin/settings" style="max-width: 600px;">
+          <%- include('../partials/csrf') %>
+          <label for="siteName">Site Name</label>
+          <input id="siteName" type="text" name="siteName" value="<%= settings.siteName %>">
+
+          <label for="announcementBanner">Announcement Banner</label>
+          <input id="announcementBanner" type="text" name="announcementBanner" value="<%= settings.announcementBanner %>">
+
+          <label for="contactEmail">Contact Email</label>
+          <input id="contactEmail" type="email" name="contactEmail" value="<%= settings.contactEmail %>">
+
+          <label for="campusOptions">Campus Options (one per line)</label>
+          <textarea id="campusOptions" name="campusOptions" rows="4"><%= (settings.campusOptions || []).join('\n') %></textarea>
+
+          <label style="display: flex; gap: 0.5rem; align-items: center; margin-top: 0.8rem;">
+            <input type="checkbox" name="maintenanceMode" <%= settings.maintenanceMode ? 'checked' : '' %>> Maintenance Mode
+          </label>
+
+          <label style="display: flex; gap: 0.5rem; align-items: center; margin-top: 0.8rem;">
+            <input type="checkbox" name="allowNewRegistrations" <%= settings.allowNewRegistrations ? 'checked' : '' %>> Allow New Registrations
+          </label>
+
+          <button class="btn btn-primary" type="submit" style="margin-top: 1rem;">Save Settings</button>
+        </form>
+      </div>
+    </div>
+  </main>
+  <%- include('../partials/footer') %>
+</body>
+</html>

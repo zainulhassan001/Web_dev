@@ -1,0 +1,24 @@
+<%# Ad card partial — expects 'ad' variable to be in scope %>
+<div class="card">
+  <div class="card-media">
+    <img src="<%= ad.images[0] || 'https://picsum.photos/400/260' %>" alt="<%= ad.title %>">
+    <% if (ad.isFeatured) { %>
+      <span class="badge-featured">Featured</span>
+    <% } %>
+  </div>
+  <div class="card-body">
+    <h3><%= ad.title %></h3>
+    <div class="meta-row" style="margin: 0.35rem 0 0.6rem;">
+      <span class="meta-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41L12 22l-8.59-8.59a2 2 0 010-2.82l6.18-6.18a2 2 0 012.82 0l8.18 8.18a2 2 0 010 2.82z" /><line x1="7" y1="7" x2="7.01" y2="7" /></svg><%= ad.category?.name %></span>
+      <span class="meta-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21a8 8 0 00-16 0" /><circle cx="12" cy="7" r="4" /></svg><%= ad.seller?.name %></span>
+      <% if (ad.campus) { %>
+        <span class="meta-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12S3 16 3 10a9 9 0 1118 0z" /><circle cx="12" cy="10" r="3" /></svg><%= ad.campus %></span>
+      <% } %>
+    </div>
+    <div style="display: flex; gap: 0.5rem; margin: 0.2rem 0 0.6rem;">
+      <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 14px; height: 14px; margin-right: 0.3rem; vertical-align: -2px;"><line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 000 7H14a3.5 3.5 0 010 7H6" /></svg>$<%= ad.price %></span>
+      <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 14px; height: 14px; margin-right: 0.3rem; vertical-align: -2px;"><path d="M20 7l-8 8-4-4" /><path d="M22 5l-10 10-6-6" /></svg><%= ad.condition %></span>
+    </div>
+    <a class="btn btn-primary" href="/ads/<%= ad.slug %>">View Ad</a>
+  </div>
+</div>

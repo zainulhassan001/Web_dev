@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'Uni Buy & Sell' %></title>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/messages.css">
+</head>
+<body>
+  <%- include('../partials/nav') %>
+  <main class="container" style="margin-top: 1rem;">
+    <%- include('../partials/flash') %>
+    <div class="messages-layout">
+      <div class="conversations">
+        <% conversations.forEach(conv => { %>
+          <% const other = conv.participants.find(p => String(p._id) !== String(currentUser._id)); %>
+          <a class="conversation-item <%= selectedConversation && String(selectedConversation._id) === String(conv._id) ? 'active' : '' %>" href="/messages/<%= conv._id %>">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <strong><%= other ? other.name : 'User' %></strong>
+              <small class="ad-meta"><%= conv.lastActivity ? new Date(conv.lastActivity).toLocaleDateString() : '' %></small>
+            </div>
+            <div class="ad-meta"><%= conv.ad?.title || 'Conversation' %></div>
+            <small class="ad-meta"><%= conv.lastMessage || 'No messages yet' %></small>
+            <% if (conv.unreadCount > 0) { %>
+              <span class="badge" style="background: var(--primary); color: var(--white); margin-top: 0.4rem;">New</span>
+            <% } %>
+          </a>
+        <% }) %>
+      </div>
+      <div class="chat-area" id="chatArea" data-conversation-id="<%= selectedConversation ? selectedConversation._id : '' %>">
+        <% if (!selectedConversation) { %>
+          <div class="chat-messages">Select a conversation to start chatting.</div>
+        <% } else { %>
+          <% if (selectedConversation.ad) { %>
+            <div style="padding: 1rem; border-bottom: 1px solid var(--border); display: flex; gap: 1rem; align-items: center; background: #f8fafc;">
+              <% if (selectedConversation.ad.images && selectedConversation.ad.images.length) { %>
+                <img src="<%= selectedConversation.ad.images[0] %>" alt="<%= selectedConversation.ad.title %>" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px;">
+              <% } else { %>
+                <div style="width: 50px; height: 50px; background: #e2e8f0; border-radius: 8px;"></div>
+              <% } %>
+              <div>
+                <div style="font-weight: 600; font-size: 0.95rem;">Regarding: <a href="/ads/<%= selectedConversation.ad.slug %>" style="color: var(--primary); text-decoration: none;"><%= selectedConversation.ad.title %></a></div>
+                <div style="color: var(--text-muted); font-size: 0.85rem;">$<%= selectedConversation.ad.price %> • <%= selectedConversation.ad.condition %></div>
+              </div>
+            </div>
+          <% } %>
+          <div class="chat-messages" id="chatMessages">
+            <% messages.forEach(msg => { %>
+              <div class="message <%= String(msg.sender._id) === String(currentUser._id) ? 'sent' : 'received' %>">
+                <p><%= msg.body %></p>
+                <small><%= new Date(msg.createdAt).toLocaleTimeString() %></small>
+              </div>
+            <% }) %>
+          </div>
+          <div id="typingIndicator" style="padding: 0 1rem; color: var(--text-muted);"></div>
+          <form id="messageForm" class="chat-input">
+            <input id="messageInput" type="text" placeholder="Type a message..." required>
+            <button class="btn btn-primary" type="submit">Send</button>
+          </form>
+        <% } %>
+      </div>
+    </div>
+  </main>
+  <%- include('../partials/footer') %>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const currentUserId = '<%= currentUser?._id %>';
+  </script>
+  <script src="/js/messages.js"></script>
+</body>
+</html>
