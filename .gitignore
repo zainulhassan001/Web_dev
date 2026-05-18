@@ -1,4 +1,6 @@
 Project/
-midterm lab/
 node_modules/
 package-lock.json
+.env
+public/uploads/*
+!public/uploads/.gitkeep
