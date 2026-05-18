@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'Uni Buy & Sell' %></title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <%- include('../partials/nav') %>
+  <main class="container">
+    <%- include('../partials/flash') %>
+    <h1>Login</h1>
+    <form method="POST" action="/login" style="max-width: 480px;">
+      <%- include('../partials/csrf') %>
+      <label for="email">Email</label>
+      <input id="email" type="email" name="email" required>
+
+      <label for="password">Password</label>
+      <input id="password" type="password" name="password" required>
+
+      <button class="btn btn-primary" type="submit" style="margin-top: 1rem;">Login</button>
+      <p style="margin-top: 1rem;">No account? <a href="/register">Register</a> · <a href="/forgot-password">Forgot Password?</a></p>
+    </form>
+  </main>
+  <%- include('../partials/footer') %>
+</body>
+</html>

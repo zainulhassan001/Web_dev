@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'On-Sale Products' %></title>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/ads.css">
+  <!-- Load jQuery from CDN -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+  <%- include('../partials/nav') %>
+  <main class="container">
+    <%- include('../partials/flash') %>
+    
+    <h1>★ On-Sale Promotional Products ★</h1>
+    <p class="ad-meta">Catch these deals before they are gone!</p>
+
+    <!-- Container for all our fetched products -->
+    <div id="product-list" class="ads-grid" style="margin-top: 1rem;">
+      <% if (ads.length > 0) { %>
+        <% ads.forEach(ad => { %>
+          <!-- We wrap each standard ad-card in an 'onsale-item' class for jQuery -->
+          <div class="onsale-item">
+            <%- include('../partials/ad-card', { ad }) %>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <p>No products are currently on sale.</p>
+      <% } %>
+    </div>
+
+    <!-- Client-side pagination controls -->
+    <% if (ads.length > 0) { %>
+      <div id="pagination-controls" style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-top: 2rem;">
+        <button id="prev-btn" class="btn btn-secondary">Previous</button>
+        <span id="page-indicator" style="font-weight: bold;">Page 1 of 1</span>
+        <button id="next-btn" class="btn btn-secondary">Next</button>
+      </div>
+    <% } %>
+
+  </main>
+  <%- include('../partials/footer') %>
+
+  <!-- Our dedicated client-side logic script -->
+  <script src="/js/onsale.js"></script>
+</body>
+</html>
